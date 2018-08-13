@@ -2,6 +2,12 @@
 set -eo pipefail
 shopt -s nullglob
 
+####################################
+# Patch1: create mysqld.sock file
+####################################
+#mount -t tmpfs -o size=10m tmpfs /var/run/mysqld/  #only root can do mount
+
+
 # if command starts with an option, prepend mysqld
 if [ "${1:0:1}" = '-' ]; then
 	set -- mysqld "$@"
