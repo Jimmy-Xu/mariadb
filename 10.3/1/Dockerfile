@@ -140,8 +140,7 @@ RUN ln -s usr/local/bin/docker-entrypoint.sh / # backwards compat
 ENTRYPOINT ["docker-entrypoint.sh"]
 
 ####################################
-# Patch1: create mysqld.sock file
-# Patch2: avoid can't init tc log
+# Patch: avoid can't init tc log
 ####################################
 RUN grep '\[mysqld\]' /etc/mysql/my.cnf -A1 | tail -n1 | grep log_bin= && echo "skip add log_bin=ON for mysqld" || sed -i '/\[mysqld\]/a\log_bin=ON' /etc/mysql/my.cnf &&\
 	grep '\[mysqld_safe\]' /etc/mysql/my.cnf -A1 | tail -n1 | grep log_bin= && echo "skip add log_bin=ON for mysqld_safe" || sed -i '/\[mysqld_safe\]/a\log_bin=ON' /etc/mysql/my.cnf &&\

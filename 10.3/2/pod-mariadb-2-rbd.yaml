@@ -1,0 +1,37 @@
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mariadb-2-rbd
+  labels:
+    app: mariadb
+spec:
+  containers:
+  - name: mariadb
+    image: hyperhq/mariadb-arm64v8:10.3-2
+    resources:
+      limits:
+        memory: 1024Mi
+    ports:
+    - name: mysql-port
+      containerPort: 3306
+    volumeMounts:
+    - mountPath: "/var/lib/mysql"
+      name: mariadb1-mount
+    env:
+    - name: MYSQL_ROOT_PASSWORD
+      value: "root"
+    - name: MYSQL_DATABASE
+      value: "test"
+    - name: MYSQL_USER
+      value: "test"
+    - name: MYSQL_PASSWORD
+      value: "test"
+  volumes:
+  - name: mariadb1-mount
+    flexVolume:
+      driver: "hyper/cephrbd"
+      fsType: "ext4"
+      options:
+        pool: "hyper"
+        volumeID: "frakti-rbd-mariadb" #rbd create -p hyper --size 1G frakti-rbd-mariadb
