@@ -2,11 +2,7 @@
 set -eo pipefail
 shopt -s nullglob
 
-####################################
-# Patch1: create mysqld.sock file
-####################################
-#mount -t tmpfs -o size=10m tmpfs /var/run/mysqld/  #only root can do mount
-
+echo "current user: $(whoami) / $(id -u)"
 
 # if command starts with an option, prepend mysqld
 if [ "${1:0:1}" = '-' ]; then
@@ -69,7 +65,13 @@ _get_config() {
 }
 
 # allow the container to be started with `--user`
-if [ "$1" = 'mysqld' -a -z "$wantHelp" -a "$(id -u)" = '0' ]; then
+if [ "$1" = 'mysqld' -a -z "$wantHelp" -a "$(id -u)" == '0' ]; then
+	####################################
+	# only root can do mount
+	####################################
+	echo "Patch1: create mysqld.sock file on tmpfs"
+	mount -t tmpfs -o size=10m tmpfs /var/run/mysqld 
+
 	_check_config "$@"
 	DATADIR="$(_get_config 'datadir' "$@")"
 	mkdir -p "$DATADIR"
