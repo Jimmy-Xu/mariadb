@@ -39,8 +39,7 @@ hyperhq/mariadb-arm64v8           10.3-2        fe0d46e0d08e     2018-08-13 09:2
 
 # test run container
 ```
-$ hyperctl rm mariadb-patched
-Pod(mariadb-patched) is successfully deleted!
-
-$ hyperctl run --name mariadb-patched --env MYSQL_ROOT_PASSWORD=my-secret-pw --memory=1024 -t hyperhq/mariadb-arm64v8:10.3-2 bash
+//run with k8s + frakti + hyperd + cephrbd flexVolume driver
+$ rbd create -p hyper --size 1G frakti-rbd-mariadb
+$ kubectl create -f pod-mariadb-2-rbd.yaml
 ```
